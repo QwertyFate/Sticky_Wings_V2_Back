@@ -21,7 +21,7 @@ main().catch(err => console.log(err));
 let CustomerName = "";
 //mongoose
 
-let DataCount = 0;
+let ticketNumber = 0;
 let Data = [];
 async function main() {
     mongoose.connect(process.env.MONGO_DB);
@@ -93,11 +93,12 @@ const checkuser = async (user) => {
     
 
 
-const DataGathered = async () => (
-    Data = await Cart.find({}),
-    DataCount = Data.length
+const DataGathered = async () => {
+    const lastInvoice = await Cart.findOne({}).sort({ ticketNumber: -1 });
+    Data = lastInvoice ? [lastInvoice] : [];
+    ticketNumber = lastInvoice.ticketNumber + 1;
     
-);
+};
 
 DataGathered();
 
@@ -121,7 +122,7 @@ app.post('/', async (req,res) => {
     const NewTicket = await new Cart({
         item: req.body.item,
         totalBill: req.body.totalBill, 
-        ticketNumber: DataCount + 1,
+        ticketNumber: ticketNumber,
         customerName: CustomerName,
         address: req.body.address
         
