@@ -9,7 +9,6 @@ var jwt = require('jsonwebtoken');
 require("dotenv").config();
 app.use(bodyParser.json())
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://192.168.100.14:3000'], // Add your local IP and any other URLs you might be testing
     credentials: true
 }));
 
